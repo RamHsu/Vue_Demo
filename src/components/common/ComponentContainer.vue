@@ -27,7 +27,7 @@ export default {
     props: ["curComponent", "curIndex"],
     data() {
         return {
-            minSize: {
+            minSize: { // 组件的最小尺寸
                 width: 50,
                 height: 50
             }
@@ -35,9 +35,9 @@ export default {
     },
     computed: {
         ...mapState("pinboard", {
-            increaseFlag: "increaseFlag"
+            increaseFlag: "increaseFlag" // 是否执行多选的操作
         }),
-
+        // 动态计算当前组件的宽高和位置
         containerStyle() {
             let _self = this;
             let style = {};
@@ -54,18 +54,20 @@ export default {
         }
     },
     methods: {
+        // 使用子状态pinboard中的mutations
         ...mapMutations("pinboard", {
             setComponents: "setComponents",
             setSelectedComponents: "setSelectedComponents",
             setComponent: "setComponent"
         }),
-
+        // 选中以及平移的操作
         selectCurComponent($event) {
             let _self = this;
             let moveFlag = false;
             let preClientX = $event.clientX;
             let preClientY = $event.clientY;
 
+            // 如果当前组件已经被选中，则执行所有被选中组件平移的操作
             if (_self.curComponent.selected) {
                 document.onmousemove = function(e) {
                     let event = e || window.event;
@@ -82,7 +84,9 @@ export default {
                     preClientY = event.clientY;
                     moveFlag = true;
                 };
-            } else {
+            } 
+            // 如果当前组件未被选中，则只执行当前组件平移的操作
+            else {
                 document.onmousemove = function(e) {
                     let event = e || window.event;
                     _self.setComponent({ 
@@ -102,14 +106,18 @@ export default {
             }
 
             document.onmouseup = function() {
+                // 如果当前组件没有被执行平移操作，那么mouseup时执行选中或取消选中的操作
                 if (!moveFlag) {
                     _self.setComponents({ 
                         callback(components) {
+                            // 如果是执行多选的操作
                             if (_self.increaseFlag) {
                                 let component = components[_self.curIndex];
                                 let selected = component.selected || false;
                                 _self.$set(component, "selected", !selected);
-                            } else {
+                            } 
+                            // 否则即为单选的操作
+                            else {
                                 components.forEach((component, index) => {
                                     _self.$set(component, "selected", index === _self.curIndex);
                                 });
@@ -121,6 +129,7 @@ export default {
                 document.onmouseup = null;
             };
         },
+        // 单组件放大缩小的操作
         dragAction($event, type) {
             let _self = this;
             let element = _self.curComponent.config && _self.curComponent.config.element || {};

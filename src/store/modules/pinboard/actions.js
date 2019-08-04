@@ -1,4 +1,9 @@
-export default { // content, payload
+export default {
+    /**
+     * 初始化
+     * @param {*} content 
+     * @param {*} payload 
+     */
     init({ commit }, payload) {
         setTimeout(function() {
             let pinboard = {

@@ -42,7 +42,7 @@ export default {
             selectedComponents: "selectedComponents"
         }),
 
-        dragActionStyle() {
+        /* dragActionStyle() {
             let _self = this;
             if (_self.selectedComponents.length) {
                 let topArr = [];
@@ -74,7 +74,7 @@ export default {
                     display: "none"
                 };
             }
-        }
+        } */
     },
     methods: {
         ...mapActions("pinboard", {
@@ -95,9 +95,8 @@ export default {
     mounted() {
         let _self = this;
         _self.init();
-
-        _self.$refs.rulerWrapper && _self.$refs.rulerWrapper.drawTicks();
-
+        
+        // 取消组件的选中状态
         window.onmousedown = function() {
             console.log("--- window mousedown ---");
             _self.setComponents({
@@ -109,12 +108,11 @@ export default {
             });
         };
 
-        window.onresize = function() {
+        /* window.onresize = function() {
             console.log("--- window resize ---");
-            _self.$refs.rulerWrapper && _self.$refs.rulerWrapper.drawTicks();
-        };
+        }; */
 
-        // 按键事件 onkeydown--onkeypress--onkeyup
+        // 按键事件 onkeydown --> onkeypress --> onkeyup
         window.onkeydown = function(e) {
             console.log("--- window keydown ---");
 
@@ -122,6 +120,7 @@ export default {
             let keyCode = event.keyCode;
             let eventKey = null;
 
+            //todo 键盘上下左右控制
             if (keyCode >= 37 && keyCode <= 40) {
                 switch (keyCode) {
                     case 37:
@@ -138,6 +137,7 @@ export default {
                         break;
                 }
             } else if (keyCode === 17) {
+                // 激活多选事件
                 _self.setIncreaseFlag({ increaseFlag: true });
             }
         };
@@ -147,6 +147,7 @@ export default {
             let event = e || window.event;
             let keyCode = event.keyCode;
 
+            // 取消多选事件
             if (keyCode === 17) _self.setIncreaseFlag({ increaseFlag: false });
         };
     },
